@@ -34,26 +34,28 @@ The backend of this application can be found on [Github - Laravel Coffeeshop](ht
 3. Navigate to the project directory:
 
     ```bash
-    cd flutter_coffeshop_app
+    cd flutter_cafe
     ```
 
-4. run this command to get the dependencies:
-
-    ```bash
-    flutter pub get -v
-    ```
-
-5. open cmd and type
+4. open cmd and type
 
     ```bash
     ipconfig
     ```
 
+5. follow this [instructions](variables copy.dart)
+
+6. run this command to get the dependencies:
+
+    ```bash
+    flutter pub get -v
+    ```
+
     then find your ipv4 address and replace the aseUrl n the li/core/constant/variables.dart wir ipv4 addripv4
 
-6. Make sure you have set up the [Github - Laravel Coffeeshop](https://github.com/IlhamGhaza/laravel-coffeshop) and run before running this Flutter application.
+7. Make sure you have set up the [Github - Laravel Coffeeshop](https://github.com/IlhamGhaza/laravel-coffeshop) and run before running this Flutter application.
 
-7. Run the application:
+8. Run the application:
 
     ```bash
     flutter run
