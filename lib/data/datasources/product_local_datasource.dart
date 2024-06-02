@@ -5,6 +5,8 @@ import 'package:flutter_cafe/presentations/home/models/product_quantity.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 
+///db local for product 
+
 class ProductLocalDatasource {
   ProductLocalDatasource._init();
 
@@ -80,7 +82,7 @@ class ProductLocalDatasource {
     final path = dbPath + filePath;
     return await openDatabase(path, version: 1, onCreate: _createDb);
   }
-
+  
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDB('dbresto.db');
