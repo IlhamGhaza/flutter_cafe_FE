@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
           // const SpaceHeight(24.0),
           const Center(
             child: Text(
-              'EAZYPOS',
+              'My cafe',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
           //  const SpaceHeight(8.0),
           const Center(
             child: Text(
-              'Nadilla @Code With Bahri #FIC14',
+              'Pos system/sistem kasir',
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
