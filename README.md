@@ -15,8 +15,9 @@ The backend of this application can be found on [Github - Laravel Coffeeshop](ht
 <!--- responsive for mobile and tablet.-->
 - Food and beverage ordering
 - Payment (cash)
-- Inventory management
 - Reporting
+- Order history
+- manage discount, biaya layanan & pajak, printer 
 <!--- CRUD Product: Feature to create, read, update, and delete products from the cafe's menu list.-->
 <!--- CRUD Discount: Feature to create, read, update, and delete discounts for cafe products or orders.-->
 <!--- Order History: Feature to view previous order history by customers.-->
