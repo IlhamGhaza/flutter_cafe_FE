@@ -65,4 +65,49 @@ class DiscountRemoteDatasource {
       return const Left('Failed to update discount');
     }
   }
+
+  Future<Either<String, bool>> editDiscount(
+    String id,
+    String name,
+    String description,
+    int value,
+  ) async {
+    final url = Uri.parse('${Variables.baseUrl}/api/updateDiscount/$id');
+    final authData = await AuthLocalDataSource().getAuthData();
+    final response = await http.put(url, headers: {
+      'Authorization': 'Bearer ${authData.token}',
+      'Accept': 'application/json',
+    }, body: {
+      'name': name,
+      'description': description,
+      'value': value.toString(),
+      'type': 'percentage',
+    });
+
+    if (response.statusCode == 200) {
+      return const Right(true);
+    } else {
+      return const Left('Failed to edit discount');
+    }
+  }
+
+  Future<Either<String, bool>> deleteDiscount(
+    String id,
+  ) async {
+    final url = Uri.parse('${Variables.baseUrl}/api/deleteDiscount/$id');
+    final authData = await AuthLocalDataSource().getAuthData();
+    final response = await http.delete(
+      url,
+      headers: {
+        'Authorization': 'Bearer ${authData.token}',
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return const Right(true);
+    } else {
+      return const Left('Failed to add discount');
+    }
+  }
 }
