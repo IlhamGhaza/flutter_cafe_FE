@@ -32,46 +32,63 @@ class _LogoutPageState extends State<LogoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('welcome'),
+        title: const Text('Welcome'),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text('Welcome to Dashboard'),
-            Text('Name: ${user?.name ?? ''}'),
-            const SizedBox(
-              height: 100,
-            ),
-            BlocListener<LogoutBloc, LogoutState>(
-              listener: (context, state) {
-                state.maybeMap(
-                  orElse: () {},
-                  error: (e) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(e.message)));
-                  },
-                  success: (value) {
-                    AuthLocalDataSource().removeAuthData();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Logout Success'),
-                      backgroundColor: AppColors.primary,
-                    ));
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Center(
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Welcome to Dashboard'),
+                      Text('Name: ${user?.name ?? ''}'),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      BlocListener<LogoutBloc, LogoutState>(
+                        listener: (context, state) {
+                          state.maybeMap(
+                            orElse: () {},
+                            error: (e) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(content: Text(e.message)));
+                            },
+                            success: (value) {
+                              AuthLocalDataSource().removeAuthData();
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                content: Text('Logout Success'),
+                                backgroundColor: AppColors.primary,
+                              ));
 
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()));
-                  },
-                );
-              },
-              child: ElevatedButton(
-                  onPressed: () {
-                    context.read<LogoutBloc>().add(const LogoutEvent.logout());
-                  },
-                  child: const Text('Logout')),
-            )
-          ],
-        ),
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginPage()));
+                            },
+                          );
+                        },
+                        child: ElevatedButton(
+                            onPressed: () {
+                              context.read<LogoutBloc>().add(const LogoutEvent.logout());
+                            },
+                            child: const Text('Logout')),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

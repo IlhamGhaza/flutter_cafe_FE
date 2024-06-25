@@ -18,16 +18,6 @@ class DiscountPage extends StatefulWidget {
 }
 
 class _DiscountPageState extends State<DiscountPage> {
-  // final List<DiscountModel> discounts = [
-  //   DiscountModel(
-  //     name: '20',
-  //     code: 'BUKAPUASA',
-  //     description: null,
-  //     discount: 50,
-  //     category: ProductCategory.food,
-  //   ),
-  // ];
-
   void onEditTap(Discount item) {
     showDialog(
       context: context,

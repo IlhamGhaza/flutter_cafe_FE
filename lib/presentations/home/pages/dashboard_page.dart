@@ -68,12 +68,6 @@ class _DashboardPageState extends State<DashboardPage> {
                           isActive: _selectedIndex == 2,
                           onTap: () => _onItemTapped(2),
                         ),
-                        // NavItem(
-                        //   iconPath: Assets.icons.calendar.path,
-                        //   isActive: _selectedIndex == 2,
-                        //   onTap: () => _onItemTapped(2),
-                        // ),
-
                         NavItem(
                           iconPath: Assets.icons.setting.path,
                           isActive: _selectedIndex == 3,
