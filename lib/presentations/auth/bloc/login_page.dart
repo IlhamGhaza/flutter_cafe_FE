@@ -21,17 +21,30 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 124.0, vertical: 20.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.1,
+          vertical: screenHeight * 0.05,
+        ),
         children: [
-          // const SpaceHeight(80.0)
           Padding(
-            padding: const EdgeInsets.fromLTRB(130.0, 80.0, 130.0, 10.0),
-            child: SvgPicture.asset(Assets.icons.homeResto.path,
-                width: 100, height: 100, color: AppColors.primary),
+            padding: EdgeInsets.fromLTRB(
+              screenWidth * 0.15,
+              screenHeight * 0.1,
+              screenWidth * 0.15,
+              screenHeight * 0.01,
+            ),
+            child: SvgPicture.asset(
+              Assets.icons.homeResto.path,
+              width: screenWidth * 0.2,
+              height: screenHeight * 0.1,
+              color: AppColors.primary,
+            ),
           ),
-          // const SpaceHeight(24.0),
           const Center(
             child: Text(
               'My cafe',
@@ -42,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          //  const SpaceHeight(8.0),
           const Center(
             child: Text(
               'Pos system/sistem kasir',
@@ -53,7 +65,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          // const SpaceHeight(40.0),
           CustomTextField(
             controller: emailController,
             label: 'Email',
@@ -69,7 +80,6 @@ class _LoginPageState extends State<LoginPage> {
             listener: (context, state) {
               state.maybeWhen(
                 success: (authResponseModel) {
-                  // save data login user
                   AuthLocalDataSource().saveAuthData(authResponseModel);
                   Navigator.pushReplacement(
                     context,
@@ -84,13 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundColor: Colors.red,
                     ),
                   );
-                  //  Navigator.pushReplacement(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => const DashboardPage()),
-                  // );
                 },
-                orElse:
-                    () {}, // Menambahkan kasus orElse untuk menangani kondisi default
+                orElse: () {},
               );
             },
             child: BlocBuilder<LoginBloc, LoginState>(
@@ -104,8 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                               password: passwordController.text,
                             ));
                       },
-                      label:
-                          'Masuk', // Gunakan const untuk meningkatkan kinerja
+                      label: 'Masuk',
                     );
                   },
                   loading: () {
@@ -115,7 +119,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     );
                   },
-                  // Tidak ada kasus yang lain
                 );
               },
             ),
