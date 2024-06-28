@@ -36,86 +36,92 @@ class _TaxPageState extends State<TaxPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const SettingsTitle('Perhitungan Biaya'),
-          const SizedBox(height: 24),
-          CustomTabBar(
-            tabTitles: const ['Layanan', 'Pajak'],
-            initialTabIndex: 0,
-            tabViews: [
-              // LAYANAN TAB
-              SizedBox(
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  itemCount: items
-                          .where((element) => element.type.isLayanan)
-                          .toList()
-                          .length +
-                      1,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 0.85,
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 30.0,
-                    mainAxisSpacing: 30.0,
-                  ),
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return AddData(
-                        title: 'Tambah Perhitungan',
-                        onPressed: onAddDataTap,
-                      );
-                    }
-                    final item = items
-                        .where((element) => element.type.isLayanan)
-                        .toList()[index - 1];
-                    return ManageTaxCard(
-                      data: item,
-                      onEditTap: () => onEditTap(item),
-                    );
-                  },
-                ),
-              ),
+    final screenWidth = MediaQuery.of(context).size.width;
+    final crossAxisCount = (screenWidth / 200).floor(); // Adjust the divisor to change the number of columns
 
-              // PAJAK TAB
-              SizedBox(
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  itemCount: items
-                          .where((element) => element.type.isPajak)
-                          .toList()
-                          .length +
-                      1,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 0.85,
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 30.0,
-                    mainAxisSpacing: 30.0,
-                  ),
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return AddData(
-                        title: 'Tambah Perhitungan',
-                        onPressed: onAddDataTap,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0), // Add padding for better spacing
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SettingsTitle('Perhitungan Biaya'),
+            const SizedBox(height: 24),
+            CustomTabBar(
+              tabTitles: const ['Layanan', 'Pajak'],
+              initialTabIndex: 0,
+              tabViews: [
+                // LAYANAN TAB
+                SizedBox(
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: items
+                            .where((element) => element.type.isLayanan)
+                            .toList()
+                            .length +
+                        1,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 0.85,
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 16.0,
+                      mainAxisSpacing: 16.0,
+                    ),
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return AddData(
+                          title: 'Tambah Perhitungan',
+                          onPressed: onAddDataTap,
+                        );
+                      }
+                      final item = items
+                          .where((element) => element.type.isLayanan)
+                          .toList()[index - 1];
+                      return ManageTaxCard(
+                        data: item,
+                        onEditTap: () => onEditTap(item),
                       );
-                    }
-                    final item = items
-                        .where((element) => element.type.isPajak)
-                        .toList()[index - 1];
-                    return ManageTaxCard(
-                      data: item,
-                      onEditTap: () => onEditTap(item),
-                    );
-                  },
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+
+                // PAJAK TAB
+                SizedBox(
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: items
+                            .where((element) => element.type.isPajak)
+                            .toList()
+                            .length +
+                        1,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 0.85,
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 16.0,
+                      mainAxisSpacing: 16.0,
+                    ),
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return AddData(
+                          title: 'Tambah Perhitungan',
+                          onPressed: onAddDataTap,
+                        );
+                      }
+                      final item = items
+                          .where((element) => element.type.isPajak)
+                          .toList()[index - 1];
+                      return ManageTaxCard(
+                        data: item,
+                        onEditTap: () => onEditTap(item),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

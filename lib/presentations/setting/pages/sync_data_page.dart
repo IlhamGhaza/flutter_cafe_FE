@@ -17,7 +17,46 @@ class _SyncDataPageState extends State<SyncDataPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 600) {
+            // Mobile layout
+            return _buildMobileLayout();
+          } else {
+            // Tablet/Desktop layout
+            return _buildTabletDesktopLayout();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildMobileLayout() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16.0),
+        const SettingsTitle('Sync Data'),
+        const SizedBox(height: 24),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSyncProductButton(),
+              const SizedBox(height: 16.0),
+              _buildSyncOrderButton(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTabletDesktopLayout() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
         const SizedBox(height: 16.0),
         const SettingsTitle('Sync Data'),
         const SizedBox(height: 24),
@@ -26,91 +65,98 @@ class _SyncDataPageState extends State<SyncDataPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BlocConsumer<SyncProductBloc, SyncProductState>(
-                listener: (context, state) {
-                  state.maybeWhen(
-                      orElse: () {},
-                      error: (message) =>
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(message),
-                            backgroundColor: Colors.red,
-                          )),
-                      loaded: (productResponseModel) {
-                        ProductLocalDatasource.instance.deleteAllProducts();
-                        ProductLocalDatasource.instance
-                            .insertProducts(productResponseModel.data!);
-
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text('Sync Product Success'),
-                          backgroundColor: Colors.green,
-                        ));
-                      });
-                },
-                builder: (context, state) {
-                  return state.maybeWhen(orElse: () {
-                    return ElevatedButton(
-                        onPressed: () {
-                          context
-                              .read<SyncProductBloc>()
-                              .add(const SyncProductEvent.syncProduct());
-                        },
-                        child: const Text(
-                          'Sync Product',
-                          style: TextStyle(color: AppColors.primary),
-                        ));
-                  }, loading: () {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  });
-                },
-              ),
-              const SizedBox(
-                width: 16.0,
-              ),
-              BlocConsumer<SyncOrderBloc, SyncOrderState>(
-                listener: (context, state) {
-                  state.maybeWhen(
-                    orElse: () {},
-                    error: (message) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(message),
-                        backgroundColor: Colors.red,
-                      ));
-                    },
-                    loaded: () => ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Sync Order Success'),
-                        backgroundColor: Colors.green,
-                      ),
-                    ),
-                  );
-                },
-                builder: (context, state) {
-                  return state.maybeWhen(orElse: () {
-                    return ElevatedButton(
-                      onPressed: () {
-                        context
-                            .read<SyncOrderBloc>()
-                            .add(const SyncOrderEvent.syncOrder());
-                      },
-                      child: const Text(
-                        'Sync Order',
-                        style: TextStyle(color: AppColors.primary),
-                      ),
-                    );
-                  }, loading: () {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  });
-                },
-              )
+              _buildSyncProductButton(),
+              const SizedBox(width: 16.0),
+              _buildSyncOrderButton(),
             ],
           ),
         ),
-      ]),
+      ],
+    );
+  }
+
+  Widget _buildSyncProductButton() {
+    return BlocConsumer<SyncProductBloc, SyncProductState>(
+      listener: (context, state) {
+        state.maybeWhen(
+          orElse: () {},
+          error: (message) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(message),
+            backgroundColor: Colors.red,
+          )),
+          loaded: (productResponseModel) {
+            ProductLocalDatasource.instance.deleteAllProducts();
+            ProductLocalDatasource.instance.insertProducts(productResponseModel.data!);
+
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Sync Product Success'),
+              backgroundColor: Colors.green,
+            ));
+          },
+        );
+      },
+      builder: (context, state) {
+        return state.maybeWhen(
+          orElse: () {
+            return ElevatedButton(
+              onPressed: () {
+                context.read<SyncProductBloc>().add(const SyncProductEvent.syncProduct());
+              },
+              child: const Text(
+                'Sync Product',
+                style: TextStyle(color: AppColors.primary),
+              ),
+            );
+          },
+          loading: () {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildSyncOrderButton() {
+    return BlocConsumer<SyncOrderBloc, SyncOrderState>(
+      listener: (context, state) {
+        state.maybeWhen(
+          orElse: () {},
+          error: (message) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(message),
+              backgroundColor: Colors.red,
+            ));
+          },
+          loaded: () => ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sync Order Success'),
+              backgroundColor: Colors.green,
+            ),
+          ),
+        );
+      },
+      builder: (context, state) {
+        return state.maybeWhen(
+          orElse: () {
+            return ElevatedButton(
+              onPressed: () {
+                context.read<SyncOrderBloc>().add(const SyncOrderEvent.syncOrder());
+              },
+              child: const Text(
+                'Sync Order',
+                style: TextStyle(color: AppColors.primary),
+              ),
+            );
+          },
+          loading: () {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        );
+      },
     );
   }
 }
