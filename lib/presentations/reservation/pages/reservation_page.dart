@@ -64,123 +64,130 @@ class _ReservationPageState extends State<ReservationPage> {
         '${fromDate.toFormattedDate2()} to ${toDate.toFormattedDate2()}';
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                // LEFT CONTENT
-                Expanded(
-                  flex: 2,
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: ListView(
-                      padding: const EdgeInsets.all(16.0),
-                      children: [
-                        const Text(
-                          'Reservasi',
-                          style: TextStyle(
-                            color: AppColors.charchoal,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isSmallScreen = constraints.maxWidth < 600;
+
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    // LEFT CONTENT
+                    if (!isSmallScreen)
+                      Expanded(
+                        flex: 2,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: ListView(
+                            padding: const EdgeInsets.all(16.0),
+                            children: [
+                              const Text(
+                                'Reservasi',
+                                style: TextStyle(
+                                  color: AppColors.charchoal,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                DateTime.now().toFormattedDate(),
+                                style: const TextStyle(
+                                  color: AppColors.charchoal,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Text(
-                          DateTime.now().toFormattedDate(),
-                          style: const TextStyle(
-                            color: AppColors.charchoal,
-                            fontSize: 16,
-                          ),
+                      ),
+                    // RIGHT CONTENT
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: CustomDatePicker(
+                                prefix: const Text('From: '),
+                                initialDate: fromDate,
+                                onDateSelected: (selectedDate) {
+                                  setState(() {
+                                    fromDate = selectedDate;
+                                  });
+                                },
+                              ),
+                            ),
+                            const SpaceWidth(20.0),
+                            Flexible(
+                              child: CustomDatePicker(
+                                prefix: const Text('To: '),
+                                initialDate: toDate,
+                                onDateSelected: (selectedDate) {
+                                  setState(() {
+                                    toDate = selectedDate;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                // RIGHT CONTENT
-                Expanded(
-                  flex: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: CustomDatePicker(
-                            prefix: const Text('From: '),
-                            initialDate: fromDate,
-                            onDateSelected: (selectedDate) {
-                              setState(() {
-                                fromDate = selectedDate;
-                              });
-                            },
-                          ),
-                        ),
-                        const SpaceWidth(20.0),
-                        Flexible(
-                          child: CustomDatePicker(
-                            prefix: const Text('To: '),
-                            initialDate: toDate,
-                            onDateSelected: (selectedDate) {
-                              setState(() {
-                                toDate = selectedDate;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                child: BlocBuilder<ReservationBloc, ReservationState>(
-                  builder: (context, state) {
-                    return state.maybeWhen(orElse: () {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
-                        ),
-                      );
-                    }, loaded: (reservations) {
-                      return GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: reservations.length + 1,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 0.85,
-                          crossAxisCount: 5,
-                          crossAxisSpacing: 30.0,
-                          mainAxisSpacing: 30.0,
-                        ),
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return AddReservasi(
-                                title: 'Tambah Reservasi',
-                                onPressed: onAddDataTap);
-                          }
-                          final item = reservations[index - 1];
-                          return ManageReservationCard(
-                            data: item,
-                            onEditTap: () => onReservationEditTap(item),
-                          );
-                        },
-                      );
-                    });
-                  },
+                  ],
                 ),
               ),
-            ),
-          )
-        ],
+              Expanded(
+                flex: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SizedBox(
+                    child: BlocBuilder<ReservationBloc, ReservationState>(
+                      builder: (context, state) {
+                        return state.maybeWhen(orElse: () {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ),
+                          );
+                        }, loaded: (reservations) {
+                          return GridView.builder(
+                            shrinkWrap: true,
+                            itemCount: reservations.length + 1,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              childAspectRatio: isSmallScreen ? 0.75 : 0.85,
+                              crossAxisCount: isSmallScreen ? 2 : 5,
+                              crossAxisSpacing: 20.0,
+                              mainAxisSpacing: 20.0,
+                            ),
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return AddReservasi(
+                                    title: 'Tambah Reservasi',
+                                    onPressed: onAddDataTap);
+                              }
+                              final item = reservations[index - 1];
+                              return ManageReservationCard(
+                                data: item,
+                                onEditTap: () => onReservationEditTap(item),
+                              );
+                            },
+                          );
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        },
       ),
     );
   }
