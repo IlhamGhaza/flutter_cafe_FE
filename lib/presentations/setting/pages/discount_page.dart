@@ -35,24 +35,24 @@ class _DiscountPageState extends State<DiscountPage> {
   @override
   void initState() {
     context.read<DiscountBloc>().add(const DiscountEvent.getDiscounts());
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final crossAxisCount = screenWidth < 600 ? 2 : 3; // Adjust columns based on screen width
+
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const SizedBox(height: 16.0),
           const SettingsTitle('Kelola Diskon'),
-          // const SizedBox(height: 24),
           CustomTabBar(
             tabTitles: const ['Semua'],
             initialTabIndex: 0,
             tabViews: [
-              // SEMUA TAB
               SizedBox(
                 child: BlocBuilder<DiscountBloc, DiscountState>(
                   builder: (context, state) {
@@ -69,10 +69,9 @@ class _DiscountPageState extends State<DiscountPage> {
                           shrinkWrap: true,
                           itemCount: discounts.length + 1,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             childAspectRatio: 0.85,
-                            crossAxisCount: 3,
+                            crossAxisCount: crossAxisCount,
                             crossAxisSpacing: 30.0,
                             mainAxisSpacing: 30.0,
                           ),
@@ -94,31 +93,6 @@ class _DiscountPageState extends State<DiscountPage> {
                         );
                       },
                     );
-                    // return GridView.builder(
-                    //   shrinkWrap: true,
-                    //   itemCount: discounts.length + 1,
-                    //   physics: const NeverScrollableScrollPhysics(),
-                    //   gridDelegate:
-                    //       const SliverGridDelegateWithFixedCrossAxisCount(
-                    //     childAspectRatio: 0.85,
-                    //     crossAxisCount: 3,
-                    //     crossAxisSpacing: 30.0,
-                    //     mainAxisSpacing: 30.0,
-                    //   ),
-                    //   itemBuilder: (context, index) {
-                    //     if (index == 0) {
-                    //       return AddData(
-                    //         title: 'Tambah Diskon Baru',
-                    //         onPressed: onAddDataTap,
-                    //       );
-                    //     }
-                    //     final item = discounts[index - 1];
-                    //     return ManageDiscountCard(
-                    //       data: item,
-                    //       onEditTap: () => onEditTap(item),
-                    //     );
-                    //   },
-                    // );
                   },
                 ),
               ),
